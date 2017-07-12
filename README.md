@@ -22,7 +22,7 @@ A joint collaboration between:
 
 |  ![logo-bsc] | ![logo-google] | ![logo-upc] | ![logo-columbia] |
 |:-:|:-:|:-:|:-:|
-| [Barcelona Supercomputing Center (BSC)](https://www.bsc.es/)  |  [Google](https://www.google.com/) | [Universitat Politecnica de Catalunya (UPC)](http://www.upc.edu/?set_language=en)   | [Columbia University](https://www.columbia.edu/ ) |
+| [Barcelona Supercomputing Center (BSC)](https://www.bsc.es/)  |  [Google](https://www.google.com/) | [Universitat Politècnica de Catalunya (UPC)](http://www.upc.edu/?set_language=en)   | [Columbia University](https://www.columbia.edu/ ) |
 
 [logo-upc]: ./figures/logos/upc.jpg "Universitat Politècnica de Catalunya"
 [logo-bsc]: ./figures/logos/bsc.jpg "Barcelona Supercomputing Center"
