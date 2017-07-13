@@ -53,8 +53,37 @@ Recurrent Neural Networks (RNNs) show outstanding performance in sequence modeli
 ### Dependencies
 This project was developed with Python 3.6.0 and TensorFlow 1.0.0. To download and install TensorFlow, please follow the [official guide](https://www.tensorflow.org/get_started/os_setup).
 
+Note: The latest versions of TensorFlow introduced changes to the RNN API. Please see [TensorFlow release information](https://github.com/tensorflow/tensorflow/blob/master/RELEASE.md) for more information.
+
 ### Using the models
-The models are ready to be used with TensorFlow's `dynamic_rnn` and can be found under `src/models/`.
+The models are ready to be used with TensorFlow's `tf.nn.dynamic_rnn` and can be found under `src/rnn_cells/skip_rnn_cells.py`. A usage example can be found below:
+
+```python
+import tensorflow as tf
+from rnn_cells.skip_rnn_cells import SkipLSTM
+
+# Define constants and hyperparameters
+NUM_CELLS = 110
+BATCH_SIZE = 256
+INPUT_SIZE = 10
+COST_PER_SAMPLE = 0.00001
+
+# Placeholder for the input tensor with shape (batch, time, input_dims)
+x = tf.placeholder(tf.float32, [None, None, INPUT_SIZE])
+
+# Create SkipLSTM and trainable initial state
+cell = SkipLSTMCell(NUM_CELLS)
+initial_state = cell.trainable_initial_state(BATCH_SIZE)
+
+# Dynamic RNN unfolding
+rnn_outputs, rnn_states = tf.nn.dynamic_rnn(cell, x, dtype=tf.float32, initial_state=initial_state)
+
+# Split the output into the actual RNN output and the state update gate
+rnn_outputs, updated_states = split_rnn_outputs(FLAGS.model, rnn_outputs)
+
+# Add a penalization for each state update (i.e. used sample)
+budget_loss = tf.reduce_mean(tf.reduce_sum(COST_PER_SAMPLE * updated_states, 1), 0)
+```
 
 
 ## Acknowledgments
