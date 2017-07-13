@@ -1,3 +1,11 @@
+"""
+Train RNN models on the adding task. The network is given a sequence of (value, marker) tuples. The desired output is
+the addition of the only two values that were marked with a 1, whereas those marked with a 0 need to be ignored.
+Markers appear only in the first 10% and last 50% of the sequences.
+
+Validation is performed on data generated on the fly.
+"""
+
 from __future__ import absolute_import
 from __future__ import print_function
 

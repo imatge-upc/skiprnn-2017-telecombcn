@@ -1,3 +1,10 @@
+"""
+Train RNN models on the frequency discrimination task. Sine waves with period in [1, 100] are randomly generated and
+the network has to classify those with period in [5, 6].
+
+Batches are stratified. Validation is performed on data generated on the fly.
+"""
+
 from __future__ import absolute_import
 from __future__ import print_function
 
