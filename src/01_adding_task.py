@@ -7,6 +7,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
+from util.misc import *
 from util.graph_definition import *
 
 # Task-independent flags
@@ -28,12 +29,11 @@ INPUT_SIZE = 2
 OUTPUT_SIZE = 1
 
 
-def sample_fraction(used_inputs, batch_size):
-    steps = 0.
-    for idx in range(batch_size):
-        for idt in range(used_inputs.shape[1]):
-            steps += used_inputs[idx, idt]
-    return steps / batch_size
+def task_setup():
+    print('\tSequence length: %d' % FLAGS.sequence_length)
+    print('\tValues drawn from Uniform[%.1f, %.1f]' % (MIN_VAL, MAX_VAL))
+    print('\tFirst marker: first %d%%' % FIRST_MARKER)
+    print('\tSecond marker: last %d%%' % SECOND_MARKER)
 
 
 def generate_example(seq_length, min_val, max_val):
@@ -151,6 +151,7 @@ def train():
 
 
 def main(argv=None):
+    print_setup(task_setup)
     train()
 
 

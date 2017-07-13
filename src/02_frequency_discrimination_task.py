@@ -7,6 +7,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
+from util.misc import *
 from util.graph_definition import *
 
 # Task-independent flags
@@ -30,12 +31,13 @@ OUTPUT_SIZE = 2
 SEQUENCE_LENGTH = int(FLAGS.signal_duration / FLAGS.sampling_period)
 
 
-def sample_fraction(used_inputs, batch_size):
-    steps = 0.
-    for idx in range(batch_size):
-        for idt in range(used_inputs.shape[1]):
-            steps += used_inputs[idx, idt]
-    return steps / batch_size
+def task_setup():
+    print('\tSignal duration: %.1fms' % FLAGS.signal_duration)
+    print('\tSampling period: %.1fms' % FLAGS.sampling_period)
+    print('\tSequence length: %d' % SEQUENCE_LENGTH)
+    print('\tTarget periods: (%.0f, %.0f)' % (START_TARGET_PERIOD, END_TARGET_PERIOD))
+    print('\tDistractor periods: (%.0f, %.0f) U (%.0f, %.0f)' % (START_PERIOD, START_TARGET_PERIOD,
+                                                                 END_TARGET_PERIOD, END_PERIOD))
 
 
 def generate_example(t, frequency, phase_shift):
@@ -153,6 +155,7 @@ def train():
 
 
 def main(argv=None):
+    print_setup(task_setup)
     train()
 
 
