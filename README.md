@@ -66,7 +66,7 @@ from rnn_cells.skip_rnn_cells import SkipLSTM
 NUM_CELLS = 110
 BATCH_SIZE = 256
 INPUT_SIZE = 10
-COST_PER_SAMPLE = 0.00001
+COST_PER_SAMPLE = 1e-05
 
 # Placeholder for the input tensor with shape (batch, time, input_dims)
 x = tf.placeholder(tf.float32, [None, None, INPUT_SIZE])
