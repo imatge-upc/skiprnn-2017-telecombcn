@@ -14,10 +14,10 @@ markdown: kramdown
 
 
 ### content configuration ###
-title:       "Paper title"
-keywords:    "computer vision, deep learning, whatever"
+title:       "Skipping State Updates in Recurrent Neural Networks"
+keywords:    "deep learning, recurrent neural networks, rnn"
 description: "Description here"
-source_link: "https://github.com/imatge-upc/wwwtemplate"
+source_link: "https://github.com/imatge-upc/skiprnn-2017-tfm"
 favicon:     "img/favicon.ico"
 touch_icon:  "img/apple-touch-icon.png"
 # google_analytics_key: UA-49607422-1 ## put YOUR key here to enable tracking! (blank to disable)
