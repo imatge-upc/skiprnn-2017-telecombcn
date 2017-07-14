@@ -1,8 +1,5 @@
 """
 Skip RNN cells that decide which timesteps should be attended.
-
-Implementation for the Binary Neuron is based on
-    http://r2rt.com/binary-stochastic-neurons-in-tensorflow.html
 """
 
 from __future__ import absolute_import
@@ -28,6 +25,8 @@ def _binary_round(x):
     """
     Rounds a tensor whose values are in [0,1] to a tensor with values in {0, 1},
     using the straight through estimator for the gradient.
+    
+    Based on http://r2rt.com/binary-stochastic-neurons-in-tensorflow.html
     """
     g = tf.get_default_graph()
 
