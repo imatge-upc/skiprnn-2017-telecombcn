@@ -27,6 +27,9 @@ def _binary_round(x):
     using the straight through estimator for the gradient.
     
     Based on http://r2rt.com/binary-stochastic-neurons-in-tensorflow.html
+
+    :param x: input tensor
+    :return: y=round(x) with gradients defined by the identity mapping (y=x)
     """
     g = tf.get_default_graph()
 
@@ -42,7 +45,7 @@ class SkipLSTMCell(tf.contrib.rnn.RNNCell):
     """
     def __init__(self, num_units, forget_bias=1.0, activation=tf.tanh, layer_norm=False, update_bias=1.0):
         """
-        Initialize the SkipLSTMCell
+        Initialize the Skip LSTM cell
         :param num_units: int, the number of units in the LSTM cell
         :param forget_bias: float, the bias added to forget gates
         :param activation: activation function of the inner states
@@ -128,7 +131,7 @@ class MultiSkipLSTMCell(tf.contrib.rnn.RNNCell):
     """
     def __init__(self, num_units, forget_bias=1.0, activation=tf.tanh, layer_norm=False, update_bias=1.0):
         """
-        Initialize the MultiSkipLSTMCell
+        Initialize the stack of Skip LSTM cells
         :param num_units: list of int, the number of units in each LSTM cell
         :param forget_bias: float, the bias added to forget gates
         :param activation: activation function of the inner states
@@ -244,7 +247,7 @@ class SkipGRUCell(tf.contrib.rnn.RNNCell):
     """
     def __init__(self, num_units, activation=tf.tanh, layer_norm=False, update_bias=1.0):
         """
-        Initialize the SkipGRUCell
+        Initialize the Skip GRU cell
         :param num_units: int, the number of units in the GRU cell
         :param activation: activation function of the inner states
         :param layer_norm: bool, whether to use layer normalization
@@ -329,7 +332,7 @@ class MultiSkipGRUCell(tf.contrib.rnn.RNNCell):
     """
     def __init__(self, num_units, activation=tf.tanh, layer_norm=False, update_bias=1.0):
         """
-        Initialize the MultiSkipGRUCell
+        Initialize the stack of Skip GRU cells
         :param num_units: list of int, the number of units in each GRU cell
         :param activation: activation function of the inner states
         :param layer_norm: bool, whether to use layer normalization

@@ -19,20 +19,17 @@ class BasicLSTMCell(tf.contrib.rnn.RNNCell):
     reduce the scale of forgetting in the beginning of the training.
     """
 
-    def __init__(self, num_units, forget_bias=1.0, activation=tf.tanh, reuse=None, layer_norm=False):
-        """Initialize the basic LSTM cell.
-        Args:
-          num_units: int, The number of units in the LSTM cell.
-          forget_bias: float, The bias added to forget gates (see above).
-          activation: Activation function of the inner states.
-          reuse: (optional) Python boolean describing whether to reuse variables
-            in an existing scope.  If not `True`, and the existing scope already has
-            the given variables, an error is raised.
+    def __init__(self, num_units, forget_bias=1.0, activation=tf.tanh, layer_norm=False):
+        """
+        Initialize the basic LSTM cell
+        :param num_units: int, the number of units in the LSTM cell
+        :param forget_bias: float, the bias added to forget gates
+        :param activation: activation function of the inner states
+        :param layer_norm: bool, whether to use layer normalization
         """
         self._num_units = num_units
         self._forget_bias = forget_bias
         self._activation = activation
-        self._reuse = reuse
         self._layer_norm = layer_norm
 
     @property
@@ -69,11 +66,9 @@ class BasicLSTMCell(tf.contrib.rnn.RNNCell):
 
     def trainable_initial_state(self, batch_size):
         """
-        Create a trainable initial state for the LSTMCell
-        Arguments:
-            batch_size: number of samples per batch
-        Returns:
-            LSTMStateTuple
+        Create a trainable initial state for the BasicLSTMCell
+        :param batch_size: number of samples per batch
+        :return: LSTMStateTuple
         """
         def _create_initial_state(batch_size, state_size, trainable=True, initializer=tf.random_normal_initializer()):
             with tf.device('/cpu:0'):
@@ -95,18 +90,15 @@ class BasicGRUCell(tf.contrib.rnn.RNNCell):
     The implementation is based on http://arxiv.org/abs/1406.1078.
     """
 
-    def __init__(self, num_units, activation=tf.tanh, reuse=None, layer_norm=False):
-        """Initialize the basic GRU cell.
-        Args:
-          num_units: int, The number of units in the GRU cell.
-          activation: Activation function of the inner states.
-          reuse: (optional) Python boolean describing whether to reuse variables
-            in an existing scope.  If not `True`, and the existing scope already has
-            the given variables, an error is raised.
+    def __init__(self, num_units, activation=tf.tanh, layer_norm=False):
+        """
+        Initialize the basic GRU cell
+        :param num_units: int, the number of units in the LSTM cell
+        :param activation: activation function of the inner states
+        :param layer_norm: bool, whether to use layer normalization
         """
         self._num_units = num_units
         self._activation = activation
-        self._reuse = reuse
         self._layer_norm = layer_norm
 
     @property
@@ -140,11 +132,9 @@ class BasicGRUCell(tf.contrib.rnn.RNNCell):
 
     def trainable_initial_state(self, batch_size):
         """
-        Create a trainable initial state for the LSTMCell
-        Arguments:
-            batch_size: number of samples per batch
-        Returns:
-            LSTMStateTuple
+        Create a trainable initial state for the BasicGRUCell
+        :param batch_size: number of samples per batch
+        :return: tensor with shape [batch_size, self.state_size]
         """
         with tf.variable_scope('initial_h'):
             initial_h = rnn_ops.create_initial_state(batch_size, self._num_units)
