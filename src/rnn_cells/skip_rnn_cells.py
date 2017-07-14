@@ -42,6 +42,14 @@ class SkipLSTMCell(tf.contrib.rnn.RNNCell):
     update or copy the cell state. The binary neuron is optimized using the Straight Through Estimator.
     """
     def __init__(self, num_units, forget_bias=1.0, activation=tf.tanh, layer_norm=False, update_bias=1.0):
+        """
+        Initialize the SkipLSTMCell
+        :param num_units: int, the number of units in the LSTM cell
+        :param forget_bias: float, the bias added to forget gates
+        :param activation: activation function of the inner states
+        :param layer_norm: bool, whether to use layer normalization
+        :param update_bias: float, initial value for the bias added to the update state gate
+        """
         self._num_units = num_units
         self._forget_bias = forget_bias
         self._activation = activation
@@ -98,10 +106,8 @@ class SkipLSTMCell(tf.contrib.rnn.RNNCell):
     def trainable_initial_state(self, batch_size):
         """
         Create a trainable initial state for the SkipLSTMCell
-        Arguments:
-            batch_size: number of samples per batch
-        Returns:
-            SkipLSTMStateTuple
+        :param batch_size: number of samples per batch
+        :return: SkipLSTMStateTuple
         """
         with tf.variable_scope('initial_c'):
             initial_c = rnn_ops.create_initial_state(batch_size, self._num_units)
@@ -122,6 +128,14 @@ class MultiSkipLSTMCell(tf.contrib.rnn.RNNCell):
     the stack.
     """
     def __init__(self, num_units, forget_bias=1.0, activation=tf.tanh, layer_norm=False, update_bias=1.0):
+        """
+        Initialize the MultiSkipLSTMCell
+        :param num_units: list of int, the number of units in each LSTM cell
+        :param forget_bias: float, the bias added to forget gates
+        :param activation: activation function of the inner states
+        :param layer_norm: bool, whether to use layer normalization
+        :param update_bias: float, initial value for the bias added to the update state gate
+        """
         if not isinstance(num_units, list):
             num_units = [num_units]
         self._num_units = num_units
@@ -197,10 +211,8 @@ class MultiSkipLSTMCell(tf.contrib.rnn.RNNCell):
     def trainable_initial_state(self, batch_size):
         """
         Create a trainable initial state for the MultiSkipLSTMCell
-        Arguments:
-            batch_size: number of samples per batch
-        Returns:
-            list of SkipLSTMStateTuple
+        :param batch_size: number of samples per batch
+        :return: list of SkipLSTMStateTuple
         """
         initial_states = []
         for idx in range(self._num_layers - 1):
@@ -232,6 +244,13 @@ class SkipGRUCell(tf.contrib.rnn.RNNCell):
     update or copy the cell state. The binary neuron is optimized using the Straight Through Estimator.
     """
     def __init__(self, num_units, activation=tf.tanh, layer_norm=False, update_bias=1.0):
+        """
+        Initialize the SkipGRUCell
+        :param num_units: int, the number of units in the GRU cell
+        :param activation: activation function of the inner states
+        :param layer_norm: bool, whether to use layer normalization
+        :param update_bias: float, initial value for the bias added to the update state gate
+        """
         self._num_units = num_units
         self._activation = activation
         self._layer_norm = layer_norm
@@ -290,10 +309,8 @@ class SkipGRUCell(tf.contrib.rnn.RNNCell):
     def trainable_initial_state(self, batch_size):
         """
         Create a trainable initial state for the SkipGRUCell
-        Arguments:
-            batch_size: number of samples per batch
-        Returns:
-            SkipGRUStateTuple
+        :param batch_size: number of samples per batch
+        :return: SkipGRUStateTuple
         """
         with tf.variable_scope('initial_h'):
             initial_h = rnn_ops.create_initial_state(batch_size, self._num_units)
@@ -312,6 +329,13 @@ class MultiSkipGRUCell(tf.contrib.rnn.RNNCell):
     the stack.
     """
     def __init__(self, num_units, activation=tf.tanh, layer_norm=False, update_bias=1.0):
+        """
+        Initialize the MultiSkipGRUCell
+        :param num_units: list of int, the number of units in each GRU cell
+        :param activation: activation function of the inner states
+        :param layer_norm: bool, whether to use layer normalization
+        :param update_bias: float, initial value for the bias added to the update state gate
+        """
         if not isinstance(num_units, list):
             num_units = [num_units]
         self._num_units = num_units
@@ -390,10 +414,8 @@ class MultiSkipGRUCell(tf.contrib.rnn.RNNCell):
     def trainable_initial_state(self, batch_size):
         """
         Create a trainable initial state for the MultiSkipGRUCell
-        Arguments:
-            batch_size: number of samples per batch
-        Returns:
-            list of tensors and SkipGRUStateTuple
+        :param batch_size: number of samples per batch
+        :return: list of tensors and SkipGRUStateTuple
         """
         initial_states = []
         for idx in range(self._num_layers - 1):
