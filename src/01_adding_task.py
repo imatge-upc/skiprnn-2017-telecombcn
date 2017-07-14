@@ -49,14 +49,12 @@ def generate_example(seq_length, min_val, max_val):
     Creates a list of (a,b) tuples where a is random[min_val,max_val] and b is 1 in only
     two tuples, 0 for the rest. The ground truth is the addition of a values for tuples with b=1.
 
-    Args
-    seq_length: length of the sequence to be generated
-    min_val: minimum value a
-    max_val: maximum valye for a
+    :param seq_length: length of the sequence to be generated
+    :param min_val: minimum value for a
+    :param max_val: maximum value for a
 
-    Returns
-    x: list of (a,b) tuples
-    y: desired result
+    :return x: list of (a,b) tuples
+    :return y: ground truth
     """
     # Select b values: one in first X% of the sequence, the other in the second Y%
     b1 = random.randint(0, int(seq_length * FIRST_MARKER / 100.) - 1)
@@ -76,6 +74,14 @@ def generate_example(seq_length, min_val, max_val):
 def generate_batch(seq_length, batch_size, min_val, max_val):
     """
     Generates batch of examples.
+
+    :param seq_length: length of the sequence to be generated
+    :param batch_size: number of samples in the batch
+    :param min_val: minimum value for a
+    :param max_val: maximum value for a
+
+    :return x: batch of examples
+    :return y: batch of ground truth values
     """
     n_elems = 2
     x = np.empty((batch_size, seq_length, n_elems))
