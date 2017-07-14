@@ -160,7 +160,7 @@ def train():
                             ground_truth: valid_y})
                     valid_accuracy += valid_iter_accuracy
                     if valid_used_inputs is not None:
-                        valid_steps += sample_fraction(valid_used_inputs, FLAGS.batch_size)
+                        valid_steps += compute_used_samples(valid_used_inputs)
                     else:
                         valid_steps += SEQUENCE_LENGTH
                 valid_accuracy /= FLAGS.validation_batches

@@ -93,7 +93,7 @@ def train():
                         ground_truth: valid_y})
                 valid_accuracy += valid_iter_accuracy
                 if valid_used_inputs is not None:
-                    valid_steps += sample_fraction(valid_used_inputs, FLAGS.batch_size)
+                    valid_steps += compute_used_samples(valid_used_inputs)
                 else:
                     valid_steps += SEQUENCE_LENGTH
             valid_accuracy /= VAL_ITERS
@@ -110,7 +110,7 @@ def train():
                         ground_truth: test_y})
                 test_accuracy += test_iter_accuracy
                 if test_used_inputs is not None:
-                    test_steps += sample_fraction(test_used_inputs, FLAGS.batch_size)
+                    test_steps += compute_used_samples(test_used_inputs)
                 else:
                     test_steps += SEQUENCE_LENGTH
             test_accuracy /= TEST_ITERS

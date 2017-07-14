@@ -150,7 +150,7 @@ def train():
                             ground_truth: valid_y})
                     valid_error += valid_iter_error
                     if valid_used_inputs is not None:
-                        valid_steps += sample_fraction(valid_used_inputs, FLAGS.batch_size)
+                        valid_steps += compute_used_samples(valid_used_inputs)
                     else:
                         valid_steps += FLAGS.sequence_length
                 valid_error /= FLAGS.validation_batches

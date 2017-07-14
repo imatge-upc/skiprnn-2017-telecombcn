@@ -14,6 +14,10 @@ FLAGS = tf.app.flags.FLAGS
 
 
 def print_setup(task_specific_setup=None):
+    """
+    Print experimental setup
+    :param task_specific_setup: (optional) function printing task-specific parameters
+    """
     model_dict = {'lstm': 'LSTM', 'gru': 'GRU', 'skip_lstm': 'SkipLSTM', 'skip_gru': 'SkipGRU'}
     print('\n\n\tExperimental setup')
     print('\t------------------\n')
@@ -38,9 +42,15 @@ def print_setup(task_specific_setup=None):
     print('\n\n')
 
 
-def sample_fraction(used_inputs, batch_size):
+def compute_used_samples(update_state_gate):
+    """
+    Compute number of used samples (i.e. number of updated states)
+    :param update_state_gate: values for the update state gate
+    :return: number of used samples
+    """
+    batch_size = update_state_gate.shape[0]
     steps = 0.
     for idx in range(batch_size):
-        for idt in range(used_inputs.shape[1]):
-            steps += used_inputs[idx, idt]
+        for idt in range(update_state_gate.shape[1]):
+            steps += update_state_gate[idx, idt]
     return steps / batch_size
