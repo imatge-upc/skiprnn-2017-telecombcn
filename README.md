@@ -56,7 +56,14 @@ This project was developed with Python 3.6.0 and TensorFlow 1.0.0. To download a
 Note: The latest versions of TensorFlow introduced changes to the RNN API. Please see [TensorFlow release information](https://github.com/tensorflow/tensorflow/blob/master/RELEASE.md) for more information.
 
 ### Using the models
-The models are ready to be used with TensorFlow's `tf.nn.dynamic_rnn` and can be found under `src/rnn_cells/skip_rnn_cells.py`. An usage example can be found below:
+The models are ready to be used with TensorFlow's `tf.nn.dynamic_rnn` and can be found under `src/rnn_cells/skip_rnn_cells.py`. We provide four different RNN cells:
+
+* SkipLSTMCell: single SkipLSTM layer
+* SkipGRUCell: single SkipGRU layer
+* MultiSkipLSTMCell: stack of multiple SkipLSTM layers
+* MultiSkipGRUCell: stack of multiple SkipGRU layers
+
+An usage example can be found below:
 
 ```python
 import tensorflow as tf
