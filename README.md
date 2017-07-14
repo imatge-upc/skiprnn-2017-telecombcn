@@ -108,7 +108,7 @@ We would like to especially thank the technical support team at the Barcelona Su
 [logo-gpu_excellence_center]: ./figures/logos/gpu_excellence_center.png "Logo of NVidia"
 [logo-catalonia]: ./figures/logos/generalitat.jpg "Logo of Catalan government"
 [logo-spain]: ./figures/logos/MEyC.png "Logo of Spanish government"
-[logo-severo]: https://github.com/imatge-upc/detection-2016-nipsws/blob/master/logos/severo_ochoa.png?raw=true "Severo Ochoa"
+[logo-severo]: ./figures/logos/severo_ochoa.png "Severo Ochoa"
 
 
 ## Contact
