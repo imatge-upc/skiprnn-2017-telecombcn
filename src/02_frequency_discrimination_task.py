@@ -52,6 +52,9 @@ def generate_example(t, frequency, phase_shift):
 
 
 def random_disjoint_interval(start, end, avoid_start, avoid_end):
+    """
+    Sample a value in [start, avoid_start] U [avoid_end, end] with uniform probability
+    """
     val = random.uniform(start, end - (avoid_end - avoid_start))
     if val > avoid_start:
         val += (avoid_end - avoid_start)
@@ -60,6 +63,17 @@ def random_disjoint_interval(start, end, avoid_start, avoid_end):
 
 def generate_batch(batch_size, sampling_period, signal_duration, start_period, end_period,
                    start_target_period, end_target_period):
+    """
+    Generate a stratified batch of examples. There are two classes:
+        class 0: sine waves with period in [start_target_period, end_target_period]
+        class 1: sine waves with period in [start_period, start_target_period] U [end_target_period, end_period]
+    :param batch_size: number of samples per batch
+    :param sampling_period: sampling period in milliseconds
+    :param signal_duration: duration of the sine waves in milliseconds
+
+    :return x: batch of examples
+    :return y: batch of labels
+    """
     seq_length = int(signal_duration / sampling_period)
 
     n_elems = 1
