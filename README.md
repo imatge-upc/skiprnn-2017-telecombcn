@@ -1,4 +1,4 @@
-# Skipping State Updates in Recurrent Neural Networks
+# Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks
 
 | ![Víctor Campos][VictorCampos-photo]  |  ![Brendan Jou][BrendanJou-photo] |  ![Jordi Torres][JordiTorres-photo]  | ![Xavier Giro-i-Nieto][XavierGiro-photo]  | ![Shih-Fu Chang][ShihFuChang-photo] |  
 |:-:|:-:|:-:|:-:|:-:|
