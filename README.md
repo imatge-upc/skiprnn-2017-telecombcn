@@ -31,11 +31,16 @@ A joint collaboration between:
 
 
 
-
 ## Abstract
 
 Recurrent Neural Networks (RNNs) show outstanding performance in sequence modeling tasks. However, practitioners training RNNs on long sequences often face important challenges such as slow inference, vanishing gradients or the difficulty to capture long term dependencies. These issues are strongly related to the long and sequential computational graph resulting from unfolding the RNN in time. We introduce the Skip RNN model which extends existing RNN architectures and provides them with the ability to skip state updates, thus shortening the associated computational graph and alleviating the issues associated to long sequences. We evaluate the proposed model on a series of tasks and show how it can reduce the number of required RNN updates while preserving, and sometimes even boosting, the performance of the baseline models. 
 
+&nbsp;
+
+[model]: ./figures/skip-rnn-model.png
+![model]
+
+&nbsp;
 
 
 ## Publication
