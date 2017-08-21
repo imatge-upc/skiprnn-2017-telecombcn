@@ -89,7 +89,7 @@ initial_state = cell.trainable_initial_state(BATCH_SIZE)
 rnn_outputs, rnn_states = tf.nn.dynamic_rnn(cell, x, dtype=tf.float32, initial_state=initial_state)
 
 # Split the output into the actual RNN output and the state update gate
-rnn_outputs, updated_states = split_rnn_outputs(FLAGS.model, rnn_outputs)
+rnn_outputs, updated_states = rnn_outputs.h, rnn_outputs.state_gate
 
 # Add a penalization for each state update (i.e. used sample)
 budget_loss = tf.reduce_mean(tf.reduce_sum(COST_PER_SAMPLE * updated_states, 1), 0)
