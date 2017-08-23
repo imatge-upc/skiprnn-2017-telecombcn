@@ -14,7 +14,7 @@ markdown: kramdown
 
 
 ### content configuration ###
-title:       "Skipping State Updates in Recurrent Neural Networks"
+title:       "Skip RNN: Skipping State Updates in Recurrent Neural Networks"
 keywords:    "deep learning, recurrent neural networks, rnn"
 description: "Description here"
 source_link: "https://github.com/imatge-upc/skiprnn-2017-tfm"
