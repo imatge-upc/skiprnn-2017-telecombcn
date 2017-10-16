@@ -99,11 +99,6 @@ budget_loss = tf.reduce_mean(tf.reduce_sum(COST_PER_SAMPLE * updated_states, 1),
 ```
 
 
-## Slides
-
-<iframe src="//www.slideshare.net/slideshow/embed_code/key/3AIVxKWZcqs6EG" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/xavigiro/skip-rnn-learning-to-skip-state-updates-in-recurrent-neural-networks" title="Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks" target="_blank">Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks</a> </strong> from <strong><a href="https://www.slideshare.net/xavigiro" target="_blank">Xavier Giro-i-Nieto</a></strong> </div>
-
-
 ## Acknowledgments
 
 We would like to especially thank the technical support team at the Barcelona Supercomputing Center.
