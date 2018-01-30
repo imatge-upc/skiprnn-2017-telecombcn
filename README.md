@@ -45,14 +45,14 @@ Recurrent Neural Networks (RNNs) continue to show  outstanding performance in se
 
 ## Publication
 
-Victor Campos, Brendan Jou, Xavier Giro-i-Nieto, Jordi Torres, and Shih-Fu Chang. ["Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks"](https://arxiv.org/abs/1708.06834) arXiv preprint arXiv:1708.06834.
+Victor Campos, Brendan Jou, Xavier Giro-i-Nieto, Jordi Torres, and Shih-Fu Chang. "Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks", In International Conference on Learning Representations, 2018.
 
 ```
-@article{campos2017skip,
-  title={Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks},
-  author={Campos, Victor and Jou, Brendan and Giro-i-Nieto, Xavier and Torres, Jordi and Chang, Shih-Fu},
-  journal={arXiv preprint arXiv:1708.06834},
-  year={2017}
+@inproceedings{campos2018skip,
+title={Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks},
+author={Víctor Campos, Brendan Jou, Xavier Giró-i-Nieto, Jordi Torres, Shih-Fu Chang},
+booktitle={International Conference on Learning Representations},
+year={2018}
 }
 ```
 
