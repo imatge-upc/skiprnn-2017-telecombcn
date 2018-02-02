@@ -50,7 +50,7 @@ Victor Campos, Brendan Jou, Xavier Giro-i-Nieto, Jordi Torres, and Shih-Fu Chang
 ```
 @inproceedings{campos2018skip,
 title={Skip RNN: Learning to Skip State Updates in Recurrent Neural Networks},
-author={Víctor Campos, Brendan Jou, Xavier Giró-i-Nieto, Jordi Torres, Shih-Fu Chang},
+author={Campos, V{\'\i}ctor and Jou, Brendan and Gir{\'o}-i-Nieto, Xavier and Torres, Jordi and Chang, Shih-Fu},
 booktitle={International Conference on Learning Representations},
 year={2018}
 }
