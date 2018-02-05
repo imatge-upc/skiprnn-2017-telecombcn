@@ -98,6 +98,10 @@ rnn_outputs, updated_states = rnn_outputs.h, rnn_outputs.state_gate
 budget_loss = tf.reduce_mean(tf.reduce_sum(COST_PER_SAMPLE * updated_states, 1), 0)
 ```
 
+### PyTorch version
+
+[This repository](https://github.com/gitabcworld/skiprnn_pytorch) contains a PyTorch implementation of Skip RNN by Albert Berenguel.
+
 
 ## Acknowledgments
 
