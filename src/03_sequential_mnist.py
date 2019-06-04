@@ -43,10 +43,11 @@ TEST_ITERS = int(TEST_SAMPLES / FLAGS.batch_size)
 
 
 def input_fn(split):
+    train_split, valid_split = tfds.Split.TRAIN.subsplit([TRAIN_SAMPLES, VALID_SAMPLES])
     if split == 'train':
-        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TRAIN)
+        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=train_split)
     elif split == 'val':
-        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)  # FIXME
+        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=valid_split)
     elif split == 'test':
         dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)
     else:
@@ -57,8 +58,8 @@ def input_fn(split):
         return x, y
 
     dataset = dataset.map(preprocess)
-    dataset = dataset.batch(FLAGS.batch_size)
     dataset = dataset.repeat()
+    dataset = dataset.batch(FLAGS.batch_size)
     dataset = dataset.prefetch(10)
 
     iterator = dataset.make_initializable_iterator()
