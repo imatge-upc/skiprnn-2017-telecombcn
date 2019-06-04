@@ -44,11 +44,11 @@ TEST_ITERS = int(TEST_SAMPLES / FLAGS.batch_size)
 
 def input_fn(split):
     if split == 'train':
-        data = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TRAIN)
+        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TRAIN)
     elif split == 'val':
-        data = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)  # FIXME
+        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)  # FIXME
     elif split == 'test':
-        data = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)
+        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)
     else:
         raise ValueError()
 
@@ -56,7 +56,10 @@ def input_fn(split):
         x = tf.cast(x, tf.float32) / 255.0
         return x, y
 
-    dataset = data.map(preprocess).cache().repeat().batch(FLAGS.batch_size).prefetch(10)
+    dataset = dataset.map(preprocess)
+    dataset = dataset.batch(FLAGS.batch_size)
+    dataset = dataset.repeat()
+    dataset = dataset.prefetch(10)
 
     iterator = dataset.make_initializable_iterator()
     images, labels = iterator.get_next()
@@ -104,12 +107,6 @@ def model_fn(mode, inputs, reuse=False):
         opt, grads_and_vars = compute_gradients(loss, FLAGS.learning_rate, FLAGS.grad_clip)
         train_fn = opt.apply_gradients(grads_and_vars)
 
-    # Summaries for tensorboard
-    tf.summary.scalar('{}_loss'.format(mode), loss)
-    tf.summary.scalar('{}_acc'.format(mode), accuracy)
-    if using_skip_rnn(FLAGS.model):
-        tf.summary.scalar('{}_samples'.format(mode), tf.reduce_sum(updated_states) / FLAGS.batch_size / SEQUENCE_LENGTH)
-
     model_spec = inputs
     model_spec['variable_init_op'] = tf.global_variables_initializer()
     model_spec['samples'] = samples
@@ -117,12 +114,19 @@ def model_fn(mode, inputs, reuse=False):
     model_spec['loss'] = loss
     model_spec['accuracy'] = accuracy
     model_spec['updated_states'] = updated_states
-    model_spec['summary'] = tf.summary.merge_all()
 
     if is_training:
         model_spec['train_fn'] = train_fn
 
     return model_spec
+
+
+def scalar_summary(name, value):
+    summary = tf.summary.Summary()
+    summary_value = summary.value.add()
+    summary_value.simple_value = value
+    summary_value.tag = name
+    return summary
 
 
 def train():
@@ -139,7 +143,8 @@ def train():
     sess = tf.Session(config=config)
 
     log_dir = os.path.join(FLAGS.log_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    writer = tf.summary.FileWriter(log_dir, sess.graph)
+    valid_writer = tf.summary.FileWriter(log_dir + '/val')
+    test_writer = tf.summary.FileWriter(log_dir + '/test')
 
     # Initialize weights
     sess.run(train_model_spec['variable_init_op'])
@@ -147,7 +152,6 @@ def train():
     try:
         for epoch in range(NUM_EPOCHS):
             train_fn = train_model_spec['train_fn']
-            summary_op = train_model_spec['summary']
 
             # Load the training dataset into the pipeline
             sess.run(train_model_spec['iterator_init_op'])
@@ -155,54 +159,60 @@ def train():
             start_time = time.time()
             for iteration in range(ITERATIONS_PER_EPOCH):
                 # Perform SGD update
-                _, summary = sess.run([train_fn, summary_op])
+                sess.run([train_fn])
             duration = time.time() - start_time
-
-            writer.add_summary(summary, epoch)
 
             # Evaluate on validation data
             accuracy = valid_model_spec['accuracy']
+            loss = valid_model_spec['loss']
             updated_states = valid_model_spec['updated_states']
-            summary_op = valid_model_spec['summary']
 
             # Load the validation dataset into the pipeline
             sess.run(valid_model_spec['iterator_init_op'])
 
-            valid_accuracy, valid_steps = 0, 0
+            valid_accuracy, valid_loss, valid_steps = 0, 0, 0
             for _ in range(VALID_ITERS):
-                valid_iter_accuracy, valid_used_inputs, summary = sess.run(
-                    [accuracy, updated_states, summary_op])
+                valid_iter_accuracy, valid_iter_loss, valid_used_inputs = sess.run([accuracy, loss, updated_states])
+                valid_loss += valid_iter_loss
                 valid_accuracy += valid_iter_accuracy
                 if valid_used_inputs is not None:
                     valid_steps += compute_used_samples(valid_used_inputs)
                 else:
                     valid_steps += SEQUENCE_LENGTH
             valid_accuracy /= VALID_ITERS
+            valid_loss /= VALID_ITERS
             valid_steps /= VALID_ITERS
 
-            writer.add_summary(summary, epoch)
+            valid_writer.add_summary(scalar_summary('accuracy', valid_accuracy), epoch)
+            valid_writer.add_summary(scalar_summary('loss', valid_loss), epoch)
+            valid_writer.add_summary(scalar_summary('used_samples', 100 * valid_steps / SEQUENCE_LENGTH), epoch)
+            valid_writer.flush()
 
             # Evaluate on test data
             accuracy = test_model_spec['accuracy']
+            loss = test_model_spec['loss']
             updated_states = test_model_spec['updated_states']
-            summary_op = test_model_spec['summary']
 
             # Load the test dataset into the pipeline
             sess.run(test_model_spec['iterator_init_op'])
 
-            test_accuracy, test_steps = 0, 0
+            test_accuracy, test_loss, test_steps = 0, 0, 0
             for _ in range(TEST_ITERS):
-                test_iter_accuracy, test_used_inputs, summary = sess.run(
-                    [accuracy, updated_states, summary_op])
+                test_iter_accuracy, test_iter_loss, test_used_inputs = sess.run([accuracy, loss, updated_states])
                 test_accuracy += test_iter_accuracy
+                test_loss += test_iter_loss
                 if test_used_inputs is not None:
                     test_steps += compute_used_samples(test_used_inputs)
                 else:
                     test_steps += SEQUENCE_LENGTH
             test_accuracy /= TEST_ITERS
+            test_loss /= TEST_ITERS
             test_steps /= TEST_ITERS
 
-            writer.add_summary(summary, epoch)
+            test_writer.add_summary(scalar_summary('accuracy', test_accuracy), epoch)
+            test_writer.add_summary(scalar_summary('loss', test_loss), epoch)
+            test_writer.add_summary(scalar_summary('used_samples', 100 * test_steps / SEQUENCE_LENGTH), epoch)
+            test_writer.flush()
 
             print("Epoch %d/%d, "
                   "duration: %.2f seconds, " 
