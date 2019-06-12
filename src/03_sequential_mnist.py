@@ -31,25 +31,30 @@ FLAGS = tf.app.flags.FLAGS
 # Constants
 OUTPUT_SIZE = 10
 SEQUENCE_LENGTH = 784
-TRAIN_SAMPLES = 55000
-VALID_SAMPLES = 5000
-TEST_SAMPLES = 10000
+VALIDATION_SAMPLES = 5000
 NUM_EPOCHS = 600
 
 # Load data
+mnist_builder = tfds.builder('mnist', data_dir=FLAGS.data_path)
+mnist_builder.download_and_prepare()
+info = mnist_builder.info
+
+TRAIN_SAMPLES = info.splits[tfds.Split.TRAIN].num_examples - VALIDATION_SAMPLES
+TEST_SAMPLES = info.splits[tfds.Split.TEST].num_examples
+
 ITERATIONS_PER_EPOCH = int(TRAIN_SAMPLES / FLAGS.batch_size)
-VALID_ITERS = int(VALID_SAMPLES / FLAGS.batch_size)
+VALID_ITERS = int(VALIDATION_SAMPLES / FLAGS.batch_size)
 TEST_ITERS = int(TEST_SAMPLES / FLAGS.batch_size)
 
 
 def input_fn(split):
-    train_split, valid_split = tfds.Split.TRAIN.subsplit([TRAIN_SAMPLES, VALID_SAMPLES])
+    train_split, valid_split = tfds.Split.TRAIN.subsplit([TRAIN_SAMPLES, VALIDATION_SAMPLES])
     if split == 'train':
-        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=train_split)
+        dataset = mnist_builder.as_dataset(as_supervised=True, split=train_split)
     elif split == 'val':
-        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=valid_split)
+        dataset = mnist_builder.as_dataset(as_supervised=True, split=valid_split)
     elif split == 'test':
-        dataset = tfds.load('mnist', data_dir=FLAGS.data_path, as_supervised=True, split=tfds.Split.TEST)
+        dataset = mnist_builder.as_dataset(as_supervised=True, split=tfds.Split.TEST)
     else:
         raise ValueError()
 
@@ -60,7 +65,7 @@ def input_fn(split):
     dataset = dataset.map(preprocess)
     dataset = dataset.repeat()
     dataset = dataset.batch(FLAGS.batch_size)
-    dataset = dataset.prefetch(10)
+    dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
     iterator = dataset.make_initializable_iterator()
     images, labels = iterator.get_next()
@@ -84,7 +89,7 @@ def model_fn(mode, inputs, reuse=False):
         rnn_outputs, rnn_states = tf.nn.dynamic_rnn(cell, samples, dtype=tf.float32, initial_state=initial_state)
 
         # Split the outputs of the RNN into the actual outputs and the state update gate
-        rrnn_outputs, updated_states = split_rnn_outputs(FLAGS.model, rnn_outputs)
+        rnn_outputs, updated_states = split_rnn_outputs(FLAGS.model, rnn_outputs)
 
         logits = layers.linear(inputs=rnn_outputs[:, -1, :], num_outputs=OUTPUT_SIZE)
         predictions = tf.argmax(logits, 1)
