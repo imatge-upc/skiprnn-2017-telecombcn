@@ -43,7 +43,7 @@ TRAIN_SAMPLES = info.splits[tfds.Split.TRAIN].num_examples - VALIDATION_SAMPLES
 TEST_SAMPLES = info.splits[tfds.Split.TEST].num_examples
 
 ITERATIONS_PER_EPOCH = int(TRAIN_SAMPLES / FLAGS.batch_size)
-VALID_ITERS = int(VALIDATION_SAMPLES / FLAGS.batch_size)
+VAL_ITERS = int(VALIDATION_SAMPLES / FLAGS.batch_size)
 TEST_ITERS = int(TEST_SAMPLES / FLAGS.batch_size)
 
 
@@ -98,15 +98,15 @@ def model_fn(mode, inputs, reuse=False):
     cross_entropy_per_sample = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=ground_truth)
     cross_entropy = tf.reduce_mean(cross_entropy_per_sample)
 
+    # Compute accuracy
+    accuracy = tf.reduce_mean(tf.cast(tf.equal(predictions, ground_truth), tf.float32))
+
     # Compute loss for each updated state
     budget_loss = compute_budget_loss(FLAGS.model, cross_entropy, updated_states, FLAGS.cost_per_sample)
 
     # Combine all losses
     loss = cross_entropy + budget_loss
     loss = tf.reshape(loss, [])
-
-    # Compute accuracy
-    accuracy = tf.reduce_mean(tf.cast(tf.equal(predictions, ground_truth), tf.float32))
 
     if is_training:
         # Optimizer
@@ -177,7 +177,7 @@ def train():
             sess.run(valid_model_spec['iterator_init_op'])
 
             valid_accuracy, valid_loss, valid_steps = 0, 0, 0
-            for _ in range(VALID_ITERS):
+            for _ in range(VAL_ITERS):
                 valid_iter_accuracy, valid_iter_loss, valid_used_inputs = sess.run([accuracy, loss, updated_states])
                 valid_loss += valid_iter_loss
                 valid_accuracy += valid_iter_accuracy
@@ -185,9 +185,9 @@ def train():
                     valid_steps += compute_used_samples(valid_used_inputs)
                 else:
                     valid_steps += SEQUENCE_LENGTH
-            valid_accuracy /= VALID_ITERS
-            valid_loss /= VALID_ITERS
-            valid_steps /= VALID_ITERS
+            valid_accuracy /= VAL_ITERS
+            valid_loss /= VAL_ITERS
+            valid_steps /= VAL_ITERS
 
             valid_writer.add_summary(scalar_summary('accuracy', valid_accuracy), epoch)
             valid_writer.add_summary(scalar_summary('loss', valid_loss), epoch)
