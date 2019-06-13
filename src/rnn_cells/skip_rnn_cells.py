@@ -15,7 +15,7 @@ from tensorflow.python.framework import ops
 
 SkipLSTMStateTuple = collections.namedtuple("SkipLSTMStateTuple", ("c", "h", "update_prob", "cum_update_prob"))
 SkipLSTMOutputTuple = collections.namedtuple("SkipLSTMOutputTuple", ("h", "state_gate"))
-LSTMStateTuple = tf.contrib.rnn.LSTMStateTuple
+LSTMStateTuple = tf.nn.rnn_cell.LSTMStateTuple
 
 SkipGRUStateTuple = collections.namedtuple("SkipGRUStateTuple", ("h", "update_prob", "cum_update_prob"))
 SkipGRUOutputTuple = collections.namedtuple("SkipGRUOutputTuple", ("h", "state_gate"))
@@ -38,7 +38,7 @@ def _binary_round(x):
             return tf.round(x, name=name)
 
 
-class SkipLSTMCell(tf.contrib.rnn.RNNCell):
+class SkipLSTMCell(tf.nn.rnn_cell.RNNCell):
     """
     Single Skip LSTM cell. Augments the basic LSTM cell with a binary output that decides whether to
     update or copy the cell state. The binary neuron is optimized using the Straight Through Estimator.
@@ -124,7 +124,7 @@ class SkipLSTMCell(tf.contrib.rnn.RNNCell):
         return SkipLSTMStateTuple(initial_c, initial_h, initial_update_prob, initial_cum_update_prob)
 
 
-class MultiSkipLSTMCell(tf.contrib.rnn.RNNCell):
+class MultiSkipLSTMCell(tf.nn.rnn_cell.RNNCell):
     """
     Stack of Skip LSTM cells. The selection binary output is computed from the state of the cell on top of
     the stack.
@@ -240,7 +240,7 @@ class MultiSkipLSTMCell(tf.contrib.rnn.RNNCell):
         return initial_states
 
 
-class SkipGRUCell(tf.contrib.rnn.RNNCell):
+class SkipGRUCell(tf.nn.rnn_cell.RNNCell):
     """
     Single Skip GRU cell. Augments the basic GRU cell with a binary output that decides whether to
     update or copy the cell state. The binary neuron is optimized using the Straight Through Estimator.
@@ -325,7 +325,7 @@ class SkipGRUCell(tf.contrib.rnn.RNNCell):
         return SkipGRUStateTuple(initial_h, initial_update_prob, initial_cum_update_prob)
 
 
-class MultiSkipGRUCell(tf.contrib.rnn.RNNCell):
+class MultiSkipGRUCell(tf.nn.rnn_cell.RNNCell):
     """
     Stack of Skip GRU cells. The selection binary output is computed from the state of the cell on top of
     the stack.
