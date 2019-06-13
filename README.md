@@ -59,7 +59,7 @@ year={2018}
 ## Code
 
 ### Dependencies
-This project was developed with Python 3.6.0 and TensorFlow 1.0.0. To download and install TensorFlow, please follow the [official guide](https://www.tensorflow.org/get_started/os_setup).
+This code was developed with Python 3.6.0 and TensorFlow 1.3.1. An older version of the code for TensorFlow 1.0.0 is available under the tags menu. To download and install TensorFlow, please follow the [official guide](https://www.tensorflow.org/get_started/os_setup).
 
 ### Using the models
 The models are ready to be used with TensorFlow's `tf.nn.dynamic_rnn` and can be found under `src/rnn_cells/skip_rnn_cells.py`. We provide four different RNN cells:
@@ -105,7 +105,7 @@ budget_loss = tf.reduce_mean(tf.reduce_sum(COST_PER_SAMPLE * updated_states, 1),
 
 ## Acknowledgments
 
-We would like to especially thank the technical support team at the Barcelona Supercomputing Center.
+We would like to especially thank the technical support team at the Barcelona Supercomputing Center, as well as [Oscar Mañas](https://es.linkedin.com/in/oscmansan) for updating the original codebase to TensorFlow 1.3.1, adding TensorBoard support and improving the data loading pipeline.
 
 |   |   |
 |:--|:-:|
