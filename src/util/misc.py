@@ -54,3 +54,11 @@ def compute_used_samples(update_state_gate):
         for idt in range(update_state_gate.shape[1]):
             steps += update_state_gate[idx, idt]
     return steps / batch_size
+
+
+def scalar_summary(name, value):
+    summary = tf.summary.Summary()
+    summary_value = summary.value.add()
+    summary_value.simple_value = value
+    summary_value.tag = name
+    return summary
