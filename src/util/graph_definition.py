@@ -24,6 +24,7 @@ def create_generic_flags():
     tf.app.flags.DEFINE_integer('batch_size', 256, "Batch size.")
     tf.app.flags.DEFINE_float('learning_rate', 0.0001, "Learning rate.")
     tf.app.flags.DEFINE_float('grad_clip', 1., "Clip gradients at this value. Set to <=0 to disable clipping.")
+    tf.app.flags.DEFINE_string('logdir', '../logs', "Directory where TensorBoard logs will be stored.")
 
     # Flags for the Skip RNN cells
     tf.app.flags.DEFINE_float('cost_per_sample', 0., "Cost per used sample. Set to 0 to disable this option.")

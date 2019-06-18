@@ -24,7 +24,7 @@ from util.graph_definition import *
 create_generic_flags()
 
 # Task-specific flags
-tf.app.flags.DEFINE_string('data_path', '../data', 'Path where the MNIST data will be stored.')
+tf.app.flags.DEFINE_string('data_path', '../data', "Path where the MNIST data will be stored.")
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -127,14 +127,6 @@ def model_fn(mode, inputs, reuse=False):
     return model_spec
 
 
-def scalar_summary(name, value):
-    summary = tf.summary.Summary()
-    summary_value = summary.value.add()
-    summary_value.simple_value = value
-    summary_value.tag = name
-    return summary
-
-
 def train():
     train_inputs = input_fn(split='train')
     valid_inputs = input_fn(split='val')
@@ -144,11 +136,9 @@ def train():
     valid_model_spec = model_fn('val', valid_inputs, reuse=True)
     test_model_spec = model_fn('test', test_inputs, reuse=True)
 
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True
-    sess = tf.Session(config=config)
+    sess = tf.Session()
 
-    log_dir = os.path.join(FLAGS.log_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    log_dir = os.path.join(FLAGS.logdir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
     valid_writer = tf.summary.FileWriter(log_dir + '/val')
     test_writer = tf.summary.FileWriter(log_dir + '/test')
 
@@ -191,7 +181,7 @@ def train():
 
             valid_writer.add_summary(scalar_summary('accuracy', valid_accuracy), epoch)
             valid_writer.add_summary(scalar_summary('loss', valid_loss), epoch)
-            valid_writer.add_summary(scalar_summary('used_samples', 100 * valid_steps / SEQUENCE_LENGTH), epoch)
+            valid_writer.add_summary(scalar_summary('used_samples', valid_steps / SEQUENCE_LENGTH), epoch)
             valid_writer.flush()
 
             # Evaluate on test data
@@ -217,7 +207,7 @@ def train():
 
             test_writer.add_summary(scalar_summary('accuracy', test_accuracy), epoch)
             test_writer.add_summary(scalar_summary('loss', test_loss), epoch)
-            test_writer.add_summary(scalar_summary('used_samples', 100 * test_steps / SEQUENCE_LENGTH), epoch)
+            test_writer.add_summary(scalar_summary('used_samples', test_steps / SEQUENCE_LENGTH), epoch)
             test_writer.flush()
 
             print("Epoch %d/%d, "
